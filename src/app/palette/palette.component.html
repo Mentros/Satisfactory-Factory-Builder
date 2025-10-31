@@ -1,0 +1,43 @@
+@if (isBrowser) {
+<p-card class="m-2" [style]="{ 'height': 'fit-content' }">
+  <div class="font-bold text-xl m-2 flex align-items-center gap-2 p-2">
+    <fa-icon [icon]="faIndustry"></fa-icon>
+    <span class="text-blue-600">Building Palette</span>
+  </div>
+  <p-divider class="text-blue-900"></p-divider>
+  <div class="flex flex-column gap-3 mt-3">
+    @for (item of items; track item.key) {
+    <p-card [style]="{ 'cursor': 'grab', 'transition': 'all 0.2s' }" class="shadow-5 border-round" draggable="true"
+      (dragstart)="onDragStart($event, item.key)">
+      <div class="flex align-items-center justify-content-between p-2">
+        <div class="flex align-items-center gap-3">
+          <div class="flex align-items-center justify-content-center p-2"
+            [style]="{ 'width': '3rem', 'height': '3rem' }">
+            <fa-icon [icon]="item.icon" class="text-blue-300 text-2xl"></fa-icon>
+          </div>
+          <div class="flex flex-column">
+            <span class="text-cyan-400 font-semibold text-lg">{{ item.label }}</span>
+            <p-tag [value]="item.key" severity="info" [style]="{ 'font-size': '0.75rem' }"></p-tag>
+          </div>
+        </div>
+        <i class="pi pi-bars text-400"></i>
+      </div>
+    </p-card>
+    }
+  </div>
+</p-card>
+} @else {
+<div class="p-3">
+  <div class="text-100 font-bold mb-2">Buildings</div>
+  <div class="flex flex-column gap-2">
+    @for (item of items; track item.key) {
+    <button type="button" class="p-button-outlined flex align-items-center gap-2" draggable="true"
+      (dragstart)="onDragStart($event, item.key)">
+      <fa-icon [icon]="item.icon"></fa-icon>
+      <span>{{ item.label }}</span>
+      <span class="ml-auto">{{ item.key }}</span>
+    </button>
+    }
+  </div>
+</div>
+}

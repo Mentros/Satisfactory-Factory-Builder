@@ -1,0 +1,22 @@
+<div #canvas
+     class="w-full h-full relative grid-bg"
+     (dragover)="onDragOver($event)"
+     (drop)="onDrop($event)">
+  <div class="absolute top-0 right-0 p-2 flex gap-2">
+    @if (isBrowser) {
+      <button pButton type="button" label="Clear" severity="danger" (click)="clear()"></button>
+    } @else {
+      <button type="button" (click)="clear()">Clear</button>
+    }
+  </div>
+  @for (b of buildings; track b.id) {
+    <div class="absolute flex align-items-center justify-content-center border-1 border-500 border-round surface-800 shadow-3"
+         [style.left.px]="b.x" [style.top.px]="b.y" [style.width.px]="tile" [style.height.px]="tile"
+         draggable="true"
+         (dragstart)="onItemDragStart($event, b)"
+         (dragend)="onItemDragEnd($event, b)">
+      <fa-icon [icon]="iconFor(b.type)" class="text-cyan-700"></fa-icon>
+    </div>
+  }
+</div>
+
