@@ -1,8 +1,9 @@
 import { Component, ElementRef, Input, OnInit, PLATFORM_ID, inject, ViewChild } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { PlannerService, PlacedBuilding, BuildingType } from '../shared/services/planner.service';
+import { PlannerService, PlacedBuilding } from '../shared/services/planner.service';
+import { BuildingsService } from '../shared/services/buildings.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faIndustry, faCogs, faBolt, faCubes } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -19,7 +20,10 @@ export class CanvasComponent implements OnInit {
   protected readonly isBrowser = isPlatformBrowser(this.platformId);
   protected draggingExisting: PlacedBuilding | null = null;
 
-  constructor(private readonly planner: PlannerService) {}
+  constructor(
+    private readonly planner: PlannerService,
+    private readonly buildingsService: BuildingsService
+  ) {}
 
   get buildings(): PlacedBuilding[] {
     return this.planner.placed();
@@ -36,7 +40,7 @@ export class CanvasComponent implements OnInit {
       return;
     }
     ev.preventDefault();
-    const type = (ev.dataTransfer?.getData('application/x-satisplan-building') || ev.dataTransfer?.getData('text/plain')) as BuildingType;
+    const buildingId = ev.dataTransfer?.getData('application/x-satisplan-building') || ev.dataTransfer?.getData('text/plain');
     const rect = this.canvasRef.nativeElement.getBoundingClientRect();
     const rawX = (ev.clientX - rect.left) - this.tile / 2;
     const rawY = (ev.clientY - rect.top) - this.tile / 2;
@@ -46,14 +50,14 @@ export class CanvasComponent implements OnInit {
     if (this.draggingExisting) {
       this.planner.move(this.draggingExisting.id, x, y);
       this.draggingExisting = null;
-    } else if (type) {
-      this.planner.add(type, x, y);
+    } else if (buildingId) {
+      this.planner.add(buildingId, x, y);
     }
   }
 
   onItemDragStart(ev: DragEvent, b: PlacedBuilding): void {
     this.draggingExisting = b;
-    ev.dataTransfer?.setData('text/plain', b.type);
+    ev.dataTransfer?.setData('text/plain', b.buildingId);
     ev.stopPropagation();
   }
 
@@ -65,15 +69,9 @@ export class CanvasComponent implements OnInit {
     this.planner.clear();
   }
 
-  iconFor(type: BuildingType) {
-    switch (type) {
-      case 'miner': return faIndustry;
-      case 'smelter': return faCogs;
-      case 'constructor': return faCogs;
-      case 'storage': return faCubes;
-      case 'power': return faBolt;
-      default: return faCogs;
-    }
+  iconFor(building: PlacedBuilding): IconDefinition {
+    const buildingDef = this.buildingsService.getBuildingById(building.buildingId);
+    return buildingDef?.icon || this.buildingsService.getBuildingById('constructor')?.icon!;
   }
 
   private snap(value: number): number {

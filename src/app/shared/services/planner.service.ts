@@ -1,11 +1,9 @@
 import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-export type BuildingType = 'miner' | 'smelter' | 'constructor' | 'assembler' | 'storage' | 'power';
-
 export interface PlacedBuilding {
   id: string;
-  type: BuildingType;
+  buildingId: string; // Reference to building definition ID
   x: number; // px
   y: number; // px
 }
@@ -16,9 +14,9 @@ export class PlannerService {
   private readonly storageKey = 'satisplan.layout.v1';
   readonly placed = signal<PlacedBuilding[]>(this.load());
 
-  add(type: BuildingType, x: number, y: number): void {
-    const id = `${type}-${crypto.randomUUID()}`;
-    const updated = [...this.placed(), { id, type, x, y }];
+  add(buildingId: string, x: number, y: number): void {
+    const id = `${buildingId}-${crypto.randomUUID()}`;
+    const updated = [...this.placed(), { id, buildingId, x, y }];
     this.placed.set(updated);
     this.persist();
   }

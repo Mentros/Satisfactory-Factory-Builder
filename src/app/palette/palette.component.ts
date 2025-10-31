@@ -1,18 +1,14 @@
 import { Component, EventEmitter, Output, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faIndustry, faCogs, faBolt, faCubes } from '@fortawesome/free-solid-svg-icons';
+import { faIndustry } from '@fortawesome/free-solid-svg-icons';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { CommonModule } from '@angular/common';
-
-interface PaletteItem {
-  key: string;
-  label: string;
-  icon: any;
-}
+import { BuildingsService } from '../shared/services/buildings.service';
+import { BuildingDefinition } from '../shared/models/building.model';
 
 @Component({
   selector: 'sp-building-palette',
@@ -26,19 +22,22 @@ export class PaletteComponent {
   protected readonly isBrowser = isPlatformBrowser(this.platformId);
   protected readonly faIndustry = faIndustry;
 
-  protected readonly items: PaletteItem[] = [
-    { key: 'miner', label: 'Miner', icon: faIndustry },
-    { key: 'smelter', label: 'Smelter', icon: faCogs },
-    { key: 'constructor', label: 'Constructor', icon: faCogs },
-    { key: 'storage', label: 'Storage', icon: faCubes },
-    { key: 'power', label: 'Power', icon: faBolt }
-  ];
+  protected readonly items: BuildingDefinition[];
 
-  onDragStart(ev: DragEvent, type: string): void {
-    ev.dataTransfer?.setData('application/x-satisplan-building', type);
-    ev.dataTransfer?.setData('text/plain', type);
+  constructor(private readonly buildingsService: BuildingsService) {
+    // Get all buildings, sorted by tier then category
+    this.items = this.buildingsService.getAllBuildings()
+      .sort((a, b) => {
+        if (a.tier !== b.tier) return a.tier - b.tier;
+        return a.category.localeCompare(b.category);
+      });
+  }
+
+  onDragStart(ev: DragEvent, buildingId: string): void {
+    ev.dataTransfer?.setData('application/x-satisplan-building', buildingId);
+    ev.dataTransfer?.setData('text/plain', buildingId);
     ev.dataTransfer?.setDragImage(new Image(), 0, 0);
-    this.startDrag.emit(type);
+    this.startDrag.emit(buildingId);
   }
 }
 

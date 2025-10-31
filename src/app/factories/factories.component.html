@@ -14,8 +14,8 @@
     <div class="flex flex-column gap-2">
       @for (b of factories(); track b.id) {
         <div class="flex align-items-center gap-2">
-          <fa-icon [icon]="iconFor(b.type)" class="text-cyan-400"></fa-icon>
-          <span class="text-200">{{ labelFor(b.type) }}</span>
+          <fa-icon [icon]="iconFor(b)" class="text-cyan-400"></fa-icon>
+          <span class="text-200">{{ labelFor(b) }}</span>
           <span class="text-400">#{{ b.id }}</span>
           <span class="ml-auto text-400">({{ b.x }}, {{ b.y }})</span>
         </div>
