@@ -6,8 +6,12 @@
   </div>
   <p-divider class="palette-divider"></p-divider>
   <div class="flex flex-column gap-3 mt-3">
-    @for (item of items; track item.id) {
-    <div [style]="{ 'cursor': 'grab', 'transition': 'all 0.2s' }" class="shadow-3 hover:shadow-5 border-round palette-item-card" draggable="true"
+    @for (item of items; let last = $last; track item.id) {
+    <div 
+      class="shadow-3 hover:shadow-5 border-round palette-item-card"
+      [ngClass]="{ 'mb-3': last }"
+      style="cursor: grab; transition: all 0.2s;"
+      draggable="true"
       (dragstart)="onDragStart($event, item.id)">
       <div class="flex align-items-center justify-content-between p-2">
         <fa-icon [icon]="item.icon" class="palette-item-icon text-2xl"></fa-icon>
