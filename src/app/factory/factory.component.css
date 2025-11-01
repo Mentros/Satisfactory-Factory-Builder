@@ -1,0 +1,131 @@
+/* Factory Component - Satisfactory Orange Theme */
+.factory-page-container {
+  background-color: transparent;
+  min-height: 100%;
+}
+
+::ng-deep .factory-cards-container {
+  width: 100%;
+}
+
+::ng-deep .factory-card-item {
+  flex: 1 1 280px;
+  min-width: 400px;
+  max-width: 400px;
+}
+
+::ng-deep .factory-header-title {
+  color: #fa9549;
+}
+
+::ng-deep .factory-header-desc {
+  color: #f5f5f5;
+}
+
+::ng-deep .factory-card {
+  background-color: #1a1a1a !important;
+  border-color: #2a2a2a !important;
+}
+
+::ng-deep .factory-card:hover {
+  background-color: #252525 !important;
+  border-color: #fa9549 !important;
+}
+
+.factory-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.factory-card-header-title {
+  color: #a0a0a0;
+  font-size: 0.875rem;
+}
+
+.factory-card-header-count {
+  color: #fa9549;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+::ng-deep .factory-name {
+  color: #a0a0a0;
+}
+
+::ng-deep .factory-count {
+  color: #fa9549;
+}
+
+::ng-deep .factory-info {
+  color: #fa9549;
+}
+
+::ng-deep .factory-label {
+  color: #a0a0a0;
+}
+
+::ng-deep .factory-detail-card {
+  background-color: #1a1a1a !important;
+  border-color: #d8751f !important;
+}
+
+::ng-deep .factory-detail-title {
+  color: #fa9549;
+}
+
+::ng-deep .factory-detail-desc {
+  color: #f5f5f5;
+}
+
+::ng-deep .factory-section-title {
+  color: #fa9549;
+}
+
+::ng-deep .factory-req-item {
+  background-color: #252525 !important;
+  border-color: #2a2a2a !important;
+}
+
+::ng-deep .factory-req-text {
+  color: #f5f5f5;
+}
+
+::ng-deep .factory-req-amount {
+  color: #fa9549;
+}
+
+::ng-deep .factory-recipe-card {
+  background-color: #252525 !important;
+  border-color: #2a2a2a !important;
+}
+
+::ng-deep .factory-recipe-name {
+  color: #fa9549;
+}
+
+::ng-deep .factory-value {
+  color: #f5f5f5;
+}
+
+::ng-deep .factory-output-value {
+  color: #fa9549;
+}
+
+::ng-deep .factory-item-text {
+  color: #f5f5f5;
+}
+
+::ng-deep .factory-empty-text {
+  color: #a0a0a0;
+}
+
+::ng-deep .factory-close-btn {
+  color: #f5f5f5 !important;
+}
+
+::ng-deep .factory-close-btn:hover {
+  color: #fa9549 !important;
+  background-color: rgba(250, 149, 73, 0.1) !important;
+}
+

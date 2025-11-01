@@ -1,5 +1,6 @@
 <div #canvas
-     class="w-full h-full relative grid-bg"
+     class="relative grid-bg"
+     [style.height]="canvasHeight"
      (dragover)="onDragOver($event)"
      (drop)="onDrop($event)">
   <div class="absolute top-0 right-0 p-2 flex gap-2">
@@ -10,12 +11,12 @@
     }
   </div>
   @for (b of buildings; track b.id) {
-    <div class="absolute flex align-items-center justify-content-center border-1 border-500 border-round surface-800 shadow-3"
+    <div class="canvas-building absolute flex align-items-center justify-content-center border-1 border-round shadow-3"
          [style.left.px]="b.x" [style.top.px]="b.y" [style.width.px]="tile" [style.height.px]="tile"
          draggable="true"
          (dragstart)="onItemDragStart($event, b)"
          (dragend)="onItemDragEnd($event, b)">
-      <fa-icon [icon]="iconFor(b)" class="text-cyan-400"></fa-icon>
+      <fa-icon [icon]="iconFor(b)" class="canvas-building-icon"></fa-icon>
     </div>
   }
 </div>

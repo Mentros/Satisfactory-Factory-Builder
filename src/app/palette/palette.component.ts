@@ -4,16 +4,16 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faIndustry } from '@fortawesome/free-solid-svg-icons';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { CommonModule } from '@angular/common';
 import { BuildingsService } from '../shared/services/buildings.service';
 import { BuildingDefinition } from '../shared/models/building.model';
 
 @Component({
-  selector: 'sp-building-palette',
-  imports: [FontAwesomeModule, TagModule, ButtonModule, CardModule, DividerModule, CommonModule],
-  templateUrl: './palette.component.html'
+  selector: 'sp-palette',
+  imports: [FontAwesomeModule, TagModule, ButtonModule, DividerModule, CommonModule],
+  templateUrl: './palette.component.html',
+  styleUrl: './palette.component.css'
 })
 export class PaletteComponent {
   @Output() startDrag = new EventEmitter<string>();

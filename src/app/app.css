@@ -1,15 +1,87 @@
-/* Dark theme styling for PrimeNG components */
-::ng-deep .p-menubar {
-  background: var(--p-surface-800) !important;
-  border: none !important;
-  color: var(--p-text-color) !important;
+/* Collapsible Drawer Menu Styles - Satisfactory Orange Theme */
+.drawer-container {
+  transition: width 0.3s ease;
+  min-height: 60px;
+  background-color: #1a1a1a;
 }
 
-::ng-deep .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
-  color: var(--p-text-color) !important;
+.drawer-container.drawer-collapsed {
+  width: 60px;
 }
 
-::ng-deep .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:hover {
-  background: var(--p-surface-700) !important;
+.drawer-container.drawer-expanded {
+  width: 250px;
+}
+
+.drawer-toggle-button {
+  color: #f5f5f5 !important;
+}
+
+.drawer-toggle-button:hover {
+  background: rgba(250, 149, 73, 0.2) !important;
+  color: #fa9549 !important;
+}
+
+.drawer-menu-item {
+  min-height: 48px;
+  color: #f5f5f5;
+  transition: all 0.2s ease;
+}
+
+.drawer-menu-item:hover {
+  background: rgba(250, 149, 73, 0.15);
+  color: #ffa562;
+}
+
+.drawer-menu-item.active {
+  background: linear-gradient(90deg, rgba(250, 149, 73, 0.2), rgba(232, 133, 47, 0.15));
+  color: #fa9549;
+  border-left: 3px solid #fa9549;
+  font-weight: 600;
+}
+
+.drawer-menu-item.active .menu-icon {
+  color: #fa9549;
+}
+
+.menu-icon {
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f5f5f5;
+  transition: color 0.2s ease;
+}
+
+.drawer-menu-item:hover .menu-icon {
+  color: #ffa562;
+}
+
+.menu-label {
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  color: inherit;
+}
+
+.drawer-container.drawer-expanded .menu-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Toggle container border */
+.drawer-toggle-container {
+  border-bottom-color: #2a2a2a !important;
+}
+
+/* Drawer right border */
+.drawer-container.border-right-1 {
+  border-right-color: #d8751f !important;
+}
+
+/* Smooth transition for main content */
+.drawer-content {
+  transition: margin-left 0.3s ease;
 }
 

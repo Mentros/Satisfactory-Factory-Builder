@@ -1,0 +1,105 @@
+<div class="factory-page-container p-6">
+  <div class="mb-6">
+    <h2 class="factory-header-title text-3xl font-bold mb-2">Factory Catalog</h2>
+    <p class="factory-header-desc">Browse all available factories, their build requirements, and production recipes.</p>
+  </div>
+
+  <div class="factory-cards-container flex flex-wrap gap-4 shadow-3 hover:shadow-5 border-round-3xl p-4">
+    @for (factory of factories; track factory.id) {
+    <div
+      class="factory-card-item factory-card shadow-3 p-5 border-round-3xl cursor-pointer hover:shadow-5 transition-all transition-duration-200"
+      (click)="selectFactory(factory)">
+      <div class="factory-card-header">
+        <div class="factory-card-header-title">{{ factory.name }}</div>
+        <div class="factory-card-header-count">{{ getRecipes(factory.id).length }}</div>
+      </div>
+      <div class="mt-4">
+        @if (factory.powerConsumption) {
+        <span class="factory-info font-medium">{{ factory.powerConsumption }} MW</span>
+        <span class="factory-label"> power consumption</span>
+        } @else {
+        <span class="factory-info font-medium">Tier {{ factory.tier }}</span>
+        <span class="factory-label"> factory</span>
+        }
+      </div>
+    </div>
+    }
+  </div>
+
+  @if (selectedFactory) {
+  <div class="mt-6 factory-detail-card shadow-2 p-6 border-round-3xl">
+    <div class="flex justify-content-between align-items-start mb-4">
+      <div>
+        <h3 class="factory-detail-title text-2xl font-bold mb-2">{{ selectedFactory.name }}</h3>
+        <p class="factory-detail-desc">{{ selectedFactory.description }}</p>
+      </div>
+      <button (click)="selectedFactory = null" class="p-button-text p-button-rounded factory-close-btn" type="button">
+        <i class="pi pi-times text-xl"></i>
+      </button>
+    </div>
+
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <h4 class="factory-section-title text-lg font-semibold mb-3">Build Requirements</h4>
+        @if (getBuildRequirements(selectedFactory.id).length > 0) {
+        <div class="flex flex-column gap-2">
+          @for (req of getBuildRequirements(selectedFactory.id); track req.item) {
+          <div class="flex justify-content-between align-items-center p-2 factory-req-item border-round">
+            <span class="factory-req-text">{{ req.item }}</span>
+            <span class="font-bold factory-req-amount">{{ req.amount }}</span>
+          </div>
+          }
+        </div>
+        } @else {
+        <span class="factory-empty-text italic">No specific requirements</span>
+        }
+      </div>
+
+      <div class="col-12 md:col-6">
+        <h4 class="factory-section-title text-lg font-semibold mb-3">Production Recipes</h4>
+        @if (getRecipes(selectedFactory.id).length > 0) {
+        <div class="flex flex-column gap-3">
+          @for (recipe of getRecipes(selectedFactory.id); track recipe.id) {
+          <div class="border-1 factory-recipe-card border-round-lg p-3">
+            <div class="font-semibold mb-2 factory-recipe-name">{{ recipe.name }}</div>
+            <div class="text-sm">
+              <div class="mb-2">
+                <span class="text-sm font-semibold factory-label">Duration: </span>
+                <span class="factory-value">{{ recipe.duration }}s</span>
+              </div>
+
+              <div class="mb-2">
+                <span class="text-sm font-semibold factory-label block mb-1">Inputs:</span>
+                <div class="flex flex-column gap-1 pl-3">
+                  @for (input of recipe.inputs; track input.item) {
+                  <div class="flex justify-content-between">
+                    <span class="factory-item-text">{{ input.item }}</span>
+                    <span class="font-semibold factory-value">{{ input.amount }}/min</span>
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <div>
+                <span class="text-sm font-semibold factory-label block mb-1">Outputs:</span>
+                <div class="flex flex-column gap-1 pl-3">
+                  @for (output of recipe.outputs; track output.item) {
+                  <div class="flex justify-content-between">
+                    <span class="factory-item-text">{{ output.item }}</span>
+                    <span class="font-semibold factory-output-value">{{ output.amount }}/min</span>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        } @else {
+        <span class="factory-empty-text italic">No recipes available</span>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>

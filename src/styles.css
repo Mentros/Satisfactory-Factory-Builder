@@ -3,8 +3,18 @@
 @import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
 
-html, body, app-root, app-root > * {
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
   height: 100%;
-  background-color: var(--p-surface-900);
+  background-color: #fa9549;
+}
+
+body {
   color: var(--p-text-color);
+}
+
+app-root, app-root > * {
+  height: 100%;
 }

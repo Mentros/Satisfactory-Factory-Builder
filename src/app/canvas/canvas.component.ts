@@ -29,6 +29,28 @@ export class CanvasComponent implements OnInit {
     return this.planner.placed();
   }
 
+  get canvasHeight(): string {
+    const minHeight = 800; // Minimum scrollable height
+    if (this.buildings.length === 0) {
+      return `${minHeight}px`;
+    }
+    const minY = Math.min(...this.buildings.map(b => b.y));
+    const maxY = Math.max(...this.buildings.map(b => b.y + this.tile));
+    const height = maxY - minY + 400; // Add padding
+    return `${Math.max(minHeight, height)}px`;
+  }
+
+  get canvasWidth(): string {
+    const minWidth = 1200; // Minimum scrollable width
+    if (this.buildings.length === 0) {
+      return `${minWidth}px`;
+    }
+    const minX = Math.min(...this.buildings.map(b => b.x));
+    const maxX = Math.max(...this.buildings.map(b => b.x + this.tile));
+    const width = maxX - minX + 400; // Add padding
+    return `${Math.max(minWidth, width)}px`;
+  }
+
   ngOnInit(): void {}
 
   onDragOver(ev: DragEvent): void {

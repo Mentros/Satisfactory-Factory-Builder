@@ -1,10 +1,9 @@
-<div class="planner-shell p-2">
-  <div class="grid h-full">
-    <div class="col-12 md:col-4 lg:col-3 surface-border h-full overflow-auto">
-      <sp-building-palette></sp-building-palette>
-      <sp-factories></sp-factories>
+<div class="planner-shell">
+  <div class="grid flex-1" style="min-height: 0; height: 100%;">
+    <div class="col-12 md:col-4 lg:col-3 overflow-auto" style="height: 100%;">
+      <sp-palette></sp-palette>
     </div>
-    <div class="col-12 md:col-8 lg:col-9 h-full" style="min-height: calc(100vh - 1rem)">
+    <div class="col-12 md:col-8 lg:col-9 overflow-auto" style="height: 100%;">
       <sp-planner-canvas></sp-planner-canvas>
     </div>
   </div>
