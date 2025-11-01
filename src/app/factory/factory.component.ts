@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from 'primeng/button';
@@ -14,23 +14,50 @@ import { BuildingDefinition } from '../shared/models/building.model';
 })
 export class FactoryComponent {
   factories: BuildingDefinition[] = [];
-  selectedFactory: BuildingDefinition | null = null;
+  selectedFactory = signal<BuildingDefinition | null>(null);
 
-  constructor(private readonly factoriesService: FactoriesService) {
+  // Computed signals for selected factory data from resources
+  // Only show data if the selected factory matches the resource's factoryId
+  selectedFactoryRequirements = computed(() => {
+    const factory = this.selectedFactory();
+    const loadedFactoryId = this.factoriesService.buildRequirementsFactoryId();
+    if (!factory || factory.id !== loadedFactoryId) {
+      return [];
+    }
+    const value = this.factoriesService.buildRequirementsResource.value();
+    return Array.isArray(value) ? value : [];
+  });
+
+  selectedFactoryRecipes = computed(() => {
+    const factory = this.selectedFactory();
+    const loadedFactoryId = this.factoriesService.recipesFactoryId();
+    if (!factory || factory.id !== loadedFactoryId) {
+      return [];
+    }
+    const value = this.factoriesService.recipesResource.value();
+    return Array.isArray(value) ? value : [];
+  });
+
+  constructor(public readonly factoriesService: FactoriesService) {
     // Get all production buildings
     this.factories = this.factoriesService.getProductionBuildings();
   }
 
-  getBuildRequirements(factoryId: string) {
-    return this.factoriesService.getBuildRequirements(factoryId);
-  }
-
-  getRecipes(factoryId: string) {
-    return this.factoriesService.getRecipes(factoryId);
+  // Read-only getter for template use (no signal writes)
+  // Used for factory list cards to show recipe counts
+  // Note: This will show 0 until recipes are loaded for that factory
+  // For a production app, you might want a separate caching mechanism for counts
+  getRecipes(factoryId: string): number {
+    // Since resources are single-factory, we can't show counts for all factories
+    // This is a limitation - for now return 0 or we'd need separate resources
+    return 0;
   }
 
   selectFactory(factory: BuildingDefinition) {
-    this.selectedFactory = factory;
+    this.selectedFactory.set(factory);
+    // Trigger resource fetches for selected factory
+    this.factoriesService.loadBuildRequirements(factory.id);
+    this.factoriesService.loadRecipes(factory.id);
   }
 
   getIconBackgroundStyle(tier: number): { [key: string]: string } {

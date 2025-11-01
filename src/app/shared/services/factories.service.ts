@@ -1,18 +1,47 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { PlannerService, PlacedBuilding } from './planner.service';
 import { BuildingsService } from './buildings.service';
 import { BuildingDefinition } from '../models/building.model';
 import { FactoryRecipe } from '../models/recipe.model';
 import { BuildRequirement } from '../models/build-requirement.model';
-import { factoryBuildRequirementsTestData } from '../testdata/factory-build-requirements.testdata';
-import { factoryRecipesTestData } from '../testdata/factory-recipes.testdata';
 
 @Injectable({ providedIn: 'root' })
 export class FactoriesService {
-  // Test data - will be replaced with database data later
-  private readonly buildRequirements = factoryBuildRequirementsTestData;
-  private readonly factoryRecipes = factoryRecipesTestData;
+  private readonly http = inject(HttpClient);
+
+  // Reactive signals for httpResource params
+  readonly buildRequirementsFactoryId = signal<string | null>(null);
+  readonly recipesFactoryId = signal<string | null>(null);
+
+  // httpResource for build requirements
+  readonly buildRequirementsResource = httpResource<BuildRequirement[]>(() => {
+    const factoryId = this.buildRequirementsFactoryId();
+    if (!factoryId) return undefined;
+    return `/api/build-requirements/${factoryId}`;
+  });
+
+  // httpResource for recipes
+  readonly recipesResource = httpResource<FactoryRecipe[]>(() => {
+    const factoryId = this.recipesFactoryId();
+    if (!factoryId) return undefined;
+    return `/api/recipes/${factoryId}`;
+  });
+
+  /**
+   * Set the factory ID to fetch build requirements for
+   */
+  loadBuildRequirements(factoryId: string): void {
+    this.buildRequirementsFactoryId.set(factoryId);
+  }
+
+  /**
+   * Set the factory ID to fetch recipes for
+   */
+  loadRecipes(factoryId: string): void {
+    this.recipesFactoryId.set(factoryId);
+  }
 
   constructor(
     private readonly planner: PlannerService,
@@ -60,19 +89,6 @@ export class FactoriesService {
       .sort((a, b) => a.tier - b.tier);
   }
 
-  /**
-   * Get build requirements for a factory
-   */
-  getBuildRequirements(factoryId: string): BuildRequirement[] {
-    return this.buildRequirements[factoryId] || [];
-  }
-
-  /**
-   * Get recipes for a factory
-   */
-  getRecipes(factoryId: string): FactoryRecipe[] {
-    return this.factoryRecipes[factoryId] || [];
-  }
 
   /**
    * Get factory image URL (placeholder for now)

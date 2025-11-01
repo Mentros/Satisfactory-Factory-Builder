@@ -11,7 +11,7 @@
       (click)="selectFactory(factory)">
       <div class="factory-card-header">
         <div class="factory-card-header-title">{{ factory.name }}</div>
-        <div class="factory-card-header-count">{{ getRecipes(factory.id).length }}</div>
+        <div class="factory-card-header-count">—</div>
       </div>
       <div class="mt-4">
         @if (factory.powerConsumption) {
@@ -26,14 +26,14 @@
     }
   </div>
 
-  @if (selectedFactory) {
+  @if (selectedFactory()) {
   <div class="mt-6 factory-detail-card shadow-2 p-6 border-round-3xl">
     <div class="flex justify-content-between align-items-start mb-4">
       <div>
-        <h3 class="factory-detail-title text-2xl font-bold mb-2">{{ selectedFactory.name }}</h3>
-        <p class="factory-detail-desc">{{ selectedFactory.description }}</p>
+        <h3 class="factory-detail-title text-2xl font-bold mb-2">{{ selectedFactory()!.name }}</h3>
+        <p class="factory-detail-desc">{{ selectedFactory()!.description }}</p>
       </div>
-      <button (click)="selectedFactory = null" class="p-button-text p-button-rounded factory-close-btn" type="button">
+      <button (click)="selectedFactory.set(null)" class="p-button-text p-button-rounded factory-close-btn" type="button">
         <i class="pi pi-times text-xl"></i>
       </button>
     </div>
@@ -41,9 +41,11 @@
     <div class="grid">
       <div class="col-12 md:col-6">
         <h4 class="factory-section-title text-lg font-semibold mb-3">Build Requirements</h4>
-        @if (getBuildRequirements(selectedFactory.id).length > 0) {
+        @if (factoriesService.buildRequirementsResource.isLoading()) {
+        <span class="factory-empty-text italic">Loading...</span>
+        } @else if (selectedFactoryRequirements().length > 0) {
         <div class="flex flex-column gap-2">
-          @for (req of getBuildRequirements(selectedFactory.id); track req.item) {
+          @for (req of selectedFactoryRequirements(); track req.item) {
           <div class="flex justify-content-between align-items-center p-2 factory-req-item border-round">
             <span class="factory-req-text">{{ req.item }}</span>
             <span class="font-bold factory-req-amount">{{ req.amount }}</span>
@@ -57,9 +59,11 @@
 
       <div class="col-12 md:col-6">
         <h4 class="factory-section-title text-lg font-semibold mb-3">Production Recipes</h4>
-        @if (getRecipes(selectedFactory.id).length > 0) {
+        @if (factoriesService.recipesResource.isLoading()) {
+        <span class="factory-empty-text italic">Loading...</span>
+        } @else if (selectedFactoryRecipes().length > 0) {
         <div class="flex flex-column gap-3">
-          @for (recipe of getRecipes(selectedFactory.id); track recipe.id) {
+          @for (recipe of selectedFactoryRecipes(); track recipe.id) {
           <div class="border-1 factory-recipe-card border-round-lg p-3">
             <div class="font-semibold mb-2 factory-recipe-name">{{ recipe.name }}</div>
             <div class="text-sm">

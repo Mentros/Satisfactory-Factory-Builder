@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, PLATFORM_ID, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, PLATFORM_ID, inject, ViewChild, computed } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { PlannerService, PlacedBuilding } from '../shared/services/planner.service';
 import { BuildingsService } from '../shared/services/buildings.service';
@@ -25,36 +25,37 @@ export class CanvasComponent implements OnInit {
     private readonly buildingsService: BuildingsService
   ) {}
 
-  get buildings(): PlacedBuilding[] {
-    return this.planner.placed();
-  }
+  readonly buildings = computed(() => this.planner.placed());
 
-  get canvasHeight(): string {
+  readonly canvasHeight = computed(() => {
+    const buildings = this.buildings();
     const minHeight = 800; // Minimum scrollable height
-    if (this.buildings.length === 0) {
+    if (buildings.length === 0) {
       return `${minHeight}px`;
     }
-    const minY = Math.min(...this.buildings.map(b => b.y));
-    const maxY = Math.max(...this.buildings.map(b => b.y + this.tile));
+    const minY = Math.min(...buildings.map(b => b.y));
+    const maxY = Math.max(...buildings.map(b => b.y + this.tile));
     const height = maxY - minY + 400; // Add padding
     return `${Math.max(minHeight, height)}px`;
-  }
+  });
 
-  get canvasWidth(): string {
+  readonly canvasWidth = computed(() => {
+    const buildings = this.buildings();
     const minWidth = 1200; // Minimum scrollable width
-    if (this.buildings.length === 0) {
+    if (buildings.length === 0) {
       return `${minWidth}px`;
     }
-    const minX = Math.min(...this.buildings.map(b => b.x));
-    const maxX = Math.max(...this.buildings.map(b => b.x + this.tile));
+    const minX = Math.min(...buildings.map(b => b.x));
+    const maxX = Math.max(...buildings.map(b => b.x + this.tile));
     const width = maxX - minX + 400; // Add padding
     return `${Math.max(minWidth, width)}px`;
-  }
+  });
 
   ngOnInit(): void {}
 
   onDragOver(ev: DragEvent): void {
     ev.preventDefault();
+    ev.stopPropagation(); // Prevent event bubbling to avoid unnecessary change detection
   }
 
   onDrop(ev: DragEvent): void {
@@ -62,19 +63,32 @@ export class CanvasComponent implements OnInit {
       return;
     }
     ev.preventDefault();
+    ev.stopPropagation();
+    
+    // Extract data from the event before deferring
     const buildingId = ev.dataTransfer?.getData('application/x-satisplan-building') || ev.dataTransfer?.getData('text/plain');
-    const rect = this.canvasRef.nativeElement.getBoundingClientRect();
-    const rawX = (ev.clientX - rect.left) - this.tile / 2;
-    const rawY = (ev.clientY - rect.top) - this.tile / 2;
-    const x = this.snap(rawX);
-    const y = this.snap(rawY);
+    const clientX = ev.clientX;
+    const clientY = ev.clientY;
+    const draggingExisting = this.draggingExisting;
+    
+    // Use requestAnimationFrame to ensure drop handler doesn't block the UI thread
+    requestAnimationFrame(() => {
+      if (!this.canvasRef) {
+        return;
+      }
+      const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+      const rawX = (clientX - rect.left) - this.tile / 2;
+      const rawY = (clientY - rect.top) - this.tile / 2;
+      const x = this.snap(rawX);
+      const y = this.snap(rawY);
 
-    if (this.draggingExisting) {
-      this.planner.move(this.draggingExisting.id, x, y);
-      this.draggingExisting = null;
-    } else if (buildingId) {
-      this.planner.add(buildingId, x, y);
-    }
+      if (draggingExisting) {
+        this.planner.move(draggingExisting.id, x, y);
+        this.draggingExisting = null;
+      } else if (buildingId) {
+        this.planner.add(buildingId, x, y);
+      }
+    });
   }
 
   onItemDragStart(ev: DragEvent, b: PlacedBuilding): void {

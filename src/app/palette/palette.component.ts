@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, PLATFORM_ID, inject } from '@angular/core';
+import { Component, EventEmitter, Output, PLATFORM_ID, inject, computed } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faIndustry } from '@fortawesome/free-solid-svg-icons';
@@ -22,16 +22,15 @@ export class PaletteComponent {
   protected readonly isBrowser = isPlatformBrowser(this.platformId);
   protected readonly faIndustry = faIndustry;
 
-  protected readonly items: BuildingDefinition[];
+  readonly items = computed(() => {
+    const buildings = Array.from(this.buildingsService.buildingsCache().values());
+    return buildings.sort((a, b) => {
+      if (a.tier !== b.tier) return a.tier - b.tier;
+      return a.category.localeCompare(b.category);
+    });
+  });
 
-  constructor(private readonly buildingsService: BuildingsService) {
-    // Get all buildings, sorted by tier then category
-    this.items = this.buildingsService.getAllBuildings()
-      .sort((a, b) => {
-        if (a.tier !== b.tier) return a.tier - b.tier;
-        return a.category.localeCompare(b.category);
-      });
-  }
+  constructor(private readonly buildingsService: BuildingsService) {}
 
   onDragStart(ev: DragEvent, buildingId: string): void {
     ev.dataTransfer?.setData('application/x-satisplan-building', buildingId);

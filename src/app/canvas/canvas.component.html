@@ -1,6 +1,6 @@
 <div #canvas
      class="relative grid-bg"
-     [style.height]="canvasHeight"
+     [style.height]="canvasHeight()"
      (dragover)="onDragOver($event)"
      (drop)="onDrop($event)">
   <div class="absolute top-0 right-0 p-2 flex gap-2">
@@ -10,7 +10,7 @@
       <button type="button" (click)="clear()">Clear</button>
     }
   </div>
-  @for (b of buildings; track b.id) {
+  @for (b of buildings(); track b.id) {
     <div class="canvas-building absolute flex align-items-center justify-content-center border-1 border-round shadow-3"
          [style.left.px]="b.x" [style.top.px]="b.y" [style.width.px]="tile" [style.height.px]="tile"
          draggable="true"

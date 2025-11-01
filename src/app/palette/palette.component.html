@@ -6,7 +6,7 @@
   </div>
   <p-divider class="palette-divider"></p-divider>
   <div class="flex flex-column gap-3 mt-3">
-    @for (item of items; let last = $last; track item.id) {
+    @for (item of items(); let last = $last; track item.id) {
     <div 
       class="shadow-3 hover:shadow-5 border-round palette-item-card"
       [ngClass]="{ 'mb-3': last }"
@@ -25,7 +25,7 @@
   <div class="p-3">
     <div class="text-100 font-bold mb-2">Buildings</div>
     <div class="flex flex-column gap-2">
-      @for (item of items; track item.id) {
+      @for (item of items(); track item.id) {
       <button type="button" class="p-button-outlined flex align-items-center gap-2" draggable="true"
         (dragstart)="onDragStart($event, item.id)">
         <fa-icon [icon]="item.icon"></fa-icon>
