@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, PLATFORM_ID, inject, ViewChild, computed } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { PlannerService, PlacedBuilding } from '../shared/services/planner.service';
-import { BuildingsService } from '../shared/services/buildings.service';
+import { MachinesService } from '../shared/services/machines.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { ButtonModule } from 'primeng/button';
@@ -22,7 +22,7 @@ export class CanvasComponent implements OnInit {
 
   constructor(
     private readonly planner: PlannerService,
-    private readonly buildingsService: BuildingsService
+    private readonly machinesService: MachinesService
   ) {}
 
   readonly buildings = computed(() => this.planner.placed());
@@ -106,8 +106,8 @@ export class CanvasComponent implements OnInit {
   }
 
   iconFor(building: PlacedBuilding): IconDefinition {
-    const buildingDef = this.buildingsService.getBuildingById(building.buildingId);
-    return buildingDef?.icon || this.buildingsService.getBuildingById('constructor')?.icon!;
+    const machineDef = this.machinesService.getMachineById(building.buildingId);
+    return machineDef?.icon || this.machinesService.getMachineById('constructor')?.icon!;
   }
 
   private snap(value: number): number {

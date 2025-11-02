@@ -7,9 +7,9 @@ export const menuItems: MenuItem[] = [
     routerLink: '/Planner'
   },
   {
-    label: 'Factories',
+    label: 'Machines',
     icon: 'pi pi-th-large',
-    routerLink: '/Factories'
+    routerLink: '/Machines'
   }
 ];
 

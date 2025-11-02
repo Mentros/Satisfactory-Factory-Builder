@@ -1,6 +1,6 @@
 import { getDatabase } from './init';
 import Database from 'better-sqlite3';
-import { buildingsTestData } from '../../app/shared/testdata/buildings.testdata';
+import { machinesTestData } from '../../app/shared/testdata/buildings.testdata';
 import { factoryRecipesTestData } from '../../app/shared/testdata/factory-recipes.testdata';
 import { factoryBuildRequirementsTestData } from '../../app/shared/testdata/factory-build-requirements.testdata';
 
@@ -30,15 +30,15 @@ function getIconName(icon: any): string {
   });
 
   // For now, we'll need to pass icon names manually or use a different approach
-  // Let's create a helper that matches based on building id/category
-  return getIconNameByBuilding(icon);
+  // Let's create a helper that matches based on machine id/category
+  return getIconNameByMachine(icon);
 }
 
-function getIconNameByBuilding(iconObj: any): string {
+function getIconNameByMachine(iconObj: any): string {
   // Since we can't easily extract icon names from FontAwesome objects in backend,
   // we'll create a mapping based on what we know from the test data structure
   // This is a workaround - in a real scenario, you might store icon names differently
-  const buildingIconMap: Record<string, string> = {
+  const machineIconMap: Record<string, string> = {
     // Extraction
     'miner-mk1': 'industry',
     'miner-mk2': 'industry',
@@ -69,13 +69,13 @@ function getIconNameByBuilding(iconObj: any): string {
     'conveyor-merger': 'network-wired',
   };
 
-  // Since we're calling this from building data, we need a different approach
+  // Since we're calling this from machine data, we need a different approach
   // Let's create a function that takes the icon object and tries to match it
   return 'cogs'; // Default fallback
 }
 
-// Create icon name mapping function based on building definitions
-function getIconNameForBuilding(buildingId: string, category: string): string {
+// Create icon name mapping function based on machine definitions
+function getIconNameForMachine(machineId: string, category: string): string {
   const iconMap: Record<string, string> = {
     // Extraction
     'miner-mk1': 'industry',
@@ -108,13 +108,14 @@ function getIconNameForBuilding(buildingId: string, category: string): string {
     'conveyor-merger': 'network-wired',
   };
 
-  return iconMap[buildingId] || 'cogs';
+  return iconMap[machineId] || 'cogs';
 }
 
 export function seedDatabase(): void {
   const db = getDatabase();
   
   // Start transaction for better performance
+  // Note: Still using 'buildings' table name until database migration
   const insertBuilding = db.prepare(`
     INSERT OR REPLACE INTO buildings (
       id, name, description, category, icon_name, tier,
@@ -139,24 +140,24 @@ export function seedDatabase(): void {
   `);
 
   const transaction = db.transaction(() => {
-    // Insert buildings
-    for (const building of buildingsTestData) {
-      const iconName = getIconNameForBuilding(building.id, building.category);
-      const recipesJson = building.recipes ? JSON.stringify(building.recipes) : null;
+    // Insert machines (still using buildings table name until migration)
+    for (const machine of machinesTestData) {
+      const iconName = getIconNameForMachine(machine.id, machine.category);
+      const recipesJson = machine.recipes ? JSON.stringify(machine.recipes) : null;
 
       insertBuilding.run(
-        building.id,
-        building.name,
-        building.description,
-        building.category,
+        machine.id,
+        machine.name,
+        machine.description,
+        machine.category,
         iconName,
-        building.tier,
-        building.powerConsumption ?? null,
-        building.powerProduction ?? null,
-        building.dimensions?.width ?? null,
-        building.dimensions?.height ?? null,
-        building.maxConveyorBeltConnections ?? null,
-        building.maxPipeConnections ?? null,
+        machine.tier,
+        machine.powerConsumption ?? null,
+        machine.powerProduction ?? null,
+        machine.dimensions?.width ?? null,
+        machine.dimensions?.height ?? null,
+        machine.maxConveyorBeltConnections ?? null,
+        machine.maxPipeConnections ?? null,
         recipesJson
       );
     }

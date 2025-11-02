@@ -8,7 +8,7 @@ import express from 'express';
 import { join } from 'node:path';
 import { getDatabase } from './server/db/init';
 import { seedDatabase } from './server/db/seed';
-import { BuildingsService } from './server/services/buildings.service';
+import { MachinesService } from './server/services/machines.service';
 import { RecipesService } from './server/services/recipes.service';
 import { BuildRequirementsService } from './server/services/build-requirements.service';
 import { PlannerService } from './server/services/planner.service';
@@ -22,7 +22,7 @@ const angularApp = new AngularNodeAppEngine();
 app.use(express.json());
 
 // Lazy service initialization - only create services when actually needed (not during route extraction)
-let buildingsService: BuildingsService | null = null;
+let machinesService: MachinesService | null = null;
 let recipesService: RecipesService | null = null;
 let buildRequirementsService: BuildRequirementsService | null = null;
 let plannerService: PlannerService | null = null;
@@ -53,7 +53,7 @@ function initializeServices(): void {
   
   // Create all services together
   try {
-    buildingsService = new BuildingsService();
+    machinesService = new MachinesService();
     recipesService = new RecipesService();
     buildRequirementsService = new BuildRequirementsService();
     plannerService = new PlannerService();
@@ -66,67 +66,67 @@ function initializeServices(): void {
 
 // API Routes
 
-// Buildings endpoints
-app.get('/api/buildings', (req, res) => {
+// Machines endpoints
+app.get('/api/machines', (req, res) => {
   try {
     initializeServices();
-    if (!buildingsService) {
+    if (!machinesService) {
       return res.status(503).json({ error: 'Service not available' });
     }
-    const buildings = buildingsService.getAllBuildings();
-    return res.json(buildings);
+    const machines = machinesService.getAllMachines();
+    return res.json(machines);
   } catch (error) {
-    console.error('Error fetching buildings:', error);
+    console.error('Error fetching machines:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.get('/api/buildings/:id', (req, res) => {
+app.get('/api/machines/:id', (req, res) => {
   try {
     initializeServices();
-    if (!buildingsService) {
+    if (!machinesService) {
       return res.status(503).json({ error: 'Service not available' });
     }
-    const building = buildingsService.getBuildingById(req.params.id);
-    if (!building) {
-      return res.status(404).json({ error: 'Building not found' });
+    const machine = machinesService.getMachineById(req.params.id);
+    if (!machine) {
+      return res.status(404).json({ error: 'Machine not found' });
     }
-    return res.json(building);
+    return res.json(machine);
   } catch (error) {
-    console.error('Error fetching building:', error);
+    console.error('Error fetching machine:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.get('/api/buildings/category/:category', (req, res) => {
+app.get('/api/machines/category/:category', (req, res) => {
   try {
     initializeServices();
-    if (!buildingsService) {
+    if (!machinesService) {
       return res.status(503).json({ error: 'Service not available' });
     }
-    const buildings = buildingsService.getBuildingsByCategory(req.params.category as any);
-    return res.json(buildings);
+    const machines = machinesService.getMachinesByCategory(req.params.category as any);
+    return res.json(machines);
   } catch (error) {
-    console.error('Error fetching buildings by category:', error);
+    console.error('Error fetching machines by category:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-app.get('/api/buildings/search/:query', (req, res) => {
+app.get('/api/machines/search/:query', (req, res) => {
   try {
     initializeServices();
-    if (!buildingsService) {
+    if (!machinesService) {
       return res.status(503).json({ error: 'Service not available' });
     }
-    const buildings = buildingsService.searchBuildings(req.params.query);
-    return res.json(buildings);
+    const machines = machinesService.searchMachines(req.params.query);
+    return res.json(machines);
   } catch (error) {
-    console.error('Error searching buildings:', error);
+    console.error('Error searching machines:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// Recipes endpoints
+// Recipes endpoints (factoryId is actually machineId)
 app.get('/api/recipes/:factoryId', (req, res) => {
   try {
     initializeServices();
@@ -141,7 +141,7 @@ app.get('/api/recipes/:factoryId', (req, res) => {
   }
 });
 
-// Build requirements endpoints
+// Build requirements endpoints (factoryId is actually machineId)
 app.get('/api/build-requirements/:factoryId', (req, res) => {
   try {
     initializeServices();

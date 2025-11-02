@@ -10,13 +10,13 @@ import {
   faAtom,
   faNetworkWired
 } from '@fortawesome/free-solid-svg-icons';
-import { BuildingDefinition } from '../models/building.model';
+import { MachineDefinition } from '../models/machine.model';
 
 /**
- * Test data for buildings.
+ * Test data for machines.
  * This will be replaced with database data later.
  */
-export const buildingsTestData: BuildingDefinition[] = [
+export const machinesTestData: MachineDefinition[] = [
   // Extraction
   {
     id: 'miner-mk1',

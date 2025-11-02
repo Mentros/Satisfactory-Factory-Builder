@@ -6,8 +6,7 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { CommonModule } from '@angular/common';
-import { BuildingsService } from '../shared/services/buildings.service';
-import { BuildingDefinition } from '../shared/models/building.model';
+import { MachinesService } from '../shared/services/machines.service';
 
 @Component({
   selector: 'sp-palette',
@@ -23,14 +22,14 @@ export class PaletteComponent {
   protected readonly faIndustry = faIndustry;
 
   readonly items = computed(() => {
-    const buildings = Array.from(this.buildingsService.buildingsCache().values());
-    return buildings.sort((a, b) => {
+    const machines = Array.from(this.machinesService.machinesCache().values());
+    return machines.sort((a, b) => {
       if (a.tier !== b.tier) return a.tier - b.tier;
       return a.category.localeCompare(b.category);
     });
   });
 
-  constructor(private readonly buildingsService: BuildingsService) {}
+  constructor(private readonly machinesService: MachinesService) {}
 
   onDragStart(ev: DragEvent, buildingId: string): void {
     ev.dataTransfer?.setData('application/x-satisplan-building', buildingId);
