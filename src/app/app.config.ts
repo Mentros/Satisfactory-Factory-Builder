@@ -1,7 +1,8 @@
 import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeuix/themes/aura';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
@@ -15,14 +16,18 @@ export const appConfigBase: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch()),
-    importProvidersFrom(FontAwesomeModule)
+    importProvidersFrom(FontAwesomeModule),
+    providePrimeNG({
+      theme: {
+        preset: Aura
+      }
+    })
   ]
 };
 
 // Client config with animations
 export const appConfig: ApplicationConfig = {
   providers: [
-    ...appConfigBase.providers,
-    provideAnimations()
+    ...appConfigBase.providers
   ]
 };
