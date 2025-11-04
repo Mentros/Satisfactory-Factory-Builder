@@ -41,7 +41,7 @@
     <div class="grid">
       <div class="col-12 md:col-6">
         <h4 class="factory-section-title text-lg font-semibold mb-3">Build Requirements</h4>
-        @if (machineCatalogService.buildRequirementsResource.isLoading()) {
+        @if (machinesService.buildRequirementsResource.isLoading()) {
         <span class="factory-empty-text italic">Loading...</span>
         } @else if (selectedMachineRequirements().length > 0) {
         <div class="flex flex-column gap-2">
@@ -59,7 +59,7 @@
 
       <div class="col-12 md:col-6">
         <h4 class="factory-section-title text-lg font-semibold mb-3">Production Recipes</h4>
-        @if (machineCatalogService.recipesResource.isLoading()) {
+        @if (machinesService.recipesResource.isLoading()) {
         <span class="factory-empty-text italic">Loading...</span>
         } @else if (selectedMachineRecipes().length > 0) {
         <div class="flex flex-column gap-3">

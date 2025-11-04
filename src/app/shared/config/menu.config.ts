@@ -12,9 +12,9 @@ export const menuItems: MenuItem[] = [
     routerLink: '/Machines'
   },
   {
-    label: 'VisNetwork',
+    label: 'Build Planner',
     icon: 'pi pi-sitemap',
-    routerLink: '/VisNetwork'
+    routerLink: '/BuildPlanner'
   }
 ];
 

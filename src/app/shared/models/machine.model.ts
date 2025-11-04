@@ -1,12 +1,14 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { BuildRequirement } from './build-requirement.model';
 
-export type MachineCategory = 
-  | 'production' 
-  | 'logistics' 
-  | 'power' 
-  | 'storage' 
-  | 'extraction'
-  | 'special';
+export enum MachineCategory {
+  production = 'production',
+  logistics = 'logistics',
+  power = 'power',
+  storage = 'storage',
+  extraction = 'extraction',
+  special = 'special'
+}
 
 export interface ConnectionPoint {
   id: string;
@@ -36,6 +38,7 @@ export interface MachineDefinition extends Machine {
   recipes?: string[]; // Recipe IDs this machine can use
   maxConveyorBeltConnections?: number;
   maxPipeConnections?: number;
+  buildRequirements?: BuildRequirement[]; // Ingredients needed to build this machine
   connectionPoints?: {
     inputs: ConnectionPoint[];
     outputs: ConnectionPoint[];

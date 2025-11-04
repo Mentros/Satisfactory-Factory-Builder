@@ -1,0 +1,29 @@
+<div class="card">
+    <p-carousel [value]="machines" [numVisible]="3" [numScroll]="3" [circular]="false"
+        [responsiveOptions]="responsiveOptions">
+        <ng-template let-machine #item>
+            <div class="border-1 border-surface border-round m-2">
+                <div class="mb-4">
+                    <div class="relative mx-auto">
+                        <img [src]="getImageSrc(machine.name)" alt="Machine Image" [alt]="machine.name"
+                            class="w-full border-round" width="270" height="270" />
+                        <p-tag [value]="machine.category" [severity]="getSeverity(machine.category)"
+                            class="absolute dark:!bg-surface-900" [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
+                    </div>
+                </div>
+                <div class="mb-3 ml-2 font-medium">{{ machine.name }}</div>
+                <div class="flex justify-between items-center">
+                    <span>
+                        @for (input of machine.buildRequirements; track input.item) {
+                        <span class="m-2">{{ input.item }} x {{ input.amount }}</span>
+                        }
+                    </span>
+                </div>
+            </div>
+        </ng-template>
+    </p-carousel>
+</div>
+<div class="flex justify-center">
+    <sp-vis-network class="w-full">
+    </sp-vis-network>
+</div>

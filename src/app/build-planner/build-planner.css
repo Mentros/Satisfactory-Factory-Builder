@@ -1,0 +1,8 @@
+img {
+    width: 270px !important;
+    height: 270px !important;
+}
+
+.card {
+    border: 1px solid #ccc;
+}

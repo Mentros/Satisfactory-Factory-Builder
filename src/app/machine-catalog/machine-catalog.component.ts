@@ -2,7 +2,7 @@ import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from 'primeng/button';
-import { MachineCatalogService } from '../shared/services/machine-catalog.service';
+import { MachinesService } from '../shared/services/machines.service';
 import { MachineDefinition } from '../shared/models/machine.model';
 
 @Component({
@@ -20,27 +20,27 @@ export class MachineCatalogComponent {
   // Only show data if the selected machine matches the resource's machineId
   selectedMachineRequirements = computed(() => {
     const machine = this.selectedMachine();
-    const loadedMachineId = this.machineCatalogService.buildRequirementsMachineId();
+    const loadedMachineId = this.machinesService.buildRequirementsMachineId();
     if (!machine || machine.id !== loadedMachineId) {
       return [];
     }
-    const value = this.machineCatalogService.buildRequirementsResource.value();
+    const value = this.machinesService.buildRequirementsResource.value();
     return Array.isArray(value) ? value : [];
   });
 
   selectedMachineRecipes = computed(() => {
     const machine = this.selectedMachine();
-    const loadedMachineId = this.machineCatalogService.recipesMachineId();
+    const loadedMachineId = this.machinesService.recipesMachineId();
     if (!machine || machine.id !== loadedMachineId) {
       return [];
     }
-    const value = this.machineCatalogService.recipesResource.value();
+    const value = this.machinesService.recipesResource.value();
     return Array.isArray(value) ? value : [];
   });
 
-  constructor(public readonly machineCatalogService: MachineCatalogService) {
+  constructor(public readonly machinesService: MachinesService) {
     // Get all production machines
-    this.machines = this.machineCatalogService.getProductionMachines();
+    this.machines = this.machinesService.getProductionMachines();
   }
 
   // Read-only getter for template use (no signal writes)
@@ -56,8 +56,8 @@ export class MachineCatalogComponent {
   selectMachine(machine: MachineDefinition) {
     this.selectedMachine.set(machine);
     // Trigger resource fetches for selected machine
-    this.machineCatalogService.loadBuildRequirements(machine.id);
-    this.machineCatalogService.loadRecipes(machine.id);
+    this.machinesService.loadBuildRequirements(machine.id);
+    this.machinesService.loadRecipes(machine.id);
   }
 
   getIconBackgroundStyle(tier: number): { [key: string]: string } {

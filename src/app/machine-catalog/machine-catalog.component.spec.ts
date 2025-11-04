@@ -2,7 +2,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { MachineCatalogComponent } from './machine-catalog.component';
-import { MachineCatalogService } from '../shared/services/machine-catalog.service';
+import { MachinesService } from '../shared/services/machines.service';
 import { MachineDefinition } from '../shared/models/machine.model';
 import { BuildRequirement } from '../shared/models/build-requirement.model';
 import { FactoryRecipe } from '../shared/models/recipe.model';
@@ -10,7 +10,7 @@ import { FactoryRecipe } from '../shared/models/recipe.model';
 describe('MachineCatalogComponent', () => {
   let component: MachineCatalogComponent;
   let fixture: any;
-  let mockMachineCatalogService: jasmine.SpyObj<MachineCatalogService>;
+  let mockMachinesService: jasmine.SpyObj<MachinesService>;
   let mockBuildRequirementsResource: any;
   let mockRecipesResource: any;
 
@@ -69,9 +69,9 @@ describe('MachineCatalogComponent', () => {
       isLoading: () => isLoadingRecipes()
     };
 
-    // Create spy object for MachineCatalogService
-    mockMachineCatalogService = jasmine.createSpyObj(
-      'MachineCatalogService',
+    // Create spy object for MachinesService
+    mockMachinesService = jasmine.createSpyObj(
+      'MachinesService',
       ['getProductionMachines', 'loadBuildRequirements', 'loadRecipes'],
       {
         buildRequirementsMachineId: signal<string | null>(null),
@@ -81,13 +81,13 @@ describe('MachineCatalogComponent', () => {
       }
     );
 
-    mockMachineCatalogService.getProductionMachines.and.returnValue(mockMachines);
+    mockMachinesService.getProductionMachines.and.returnValue(mockMachines);
 
     await TestBed.configureTestingModule({
       imports: [MachineCatalogComponent],
       providers: [
         provideZonelessChangeDetection(),
-        { provide: MachineCatalogService, useValue: mockMachineCatalogService }
+        { provide: MachinesService, useValue: mockMachinesService }
       ]
     }).compileComponents();
 
@@ -100,7 +100,7 @@ describe('MachineCatalogComponent', () => {
   });
 
   it('should load machines from service on initialization', () => {
-    expect(mockMachineCatalogService.getProductionMachines).toHaveBeenCalled();
+    expect(mockMachinesService.getProductionMachines).toHaveBeenCalled();
     expect(component.machines).toEqual(mockMachines);
   });
 
@@ -112,8 +112,8 @@ describe('MachineCatalogComponent', () => {
     component.selectMachine(mockMachine);
 
     expect(component.selectedMachine()).toEqual(mockMachine);
-    expect(mockMachineCatalogService.loadBuildRequirements).toHaveBeenCalledWith(mockMachine.id);
-    expect(mockMachineCatalogService.loadRecipes).toHaveBeenCalledWith(mockMachine.id);
+    expect(mockMachinesService.loadBuildRequirements).toHaveBeenCalledWith(mockMachine.id);
+    expect(mockMachinesService.loadRecipes).toHaveBeenCalledWith(mockMachine.id);
   });
 
   it('should return empty array for selectedMachineRequirements when no machine is selected', () => {
@@ -123,7 +123,7 @@ describe('MachineCatalogComponent', () => {
 
   it('should return empty array for selectedMachineRequirements when machine ID does not match', () => {
     component.selectedMachine.set(mockMachine);
-    mockMachineCatalogService.buildRequirementsMachineId.set('different-machine');
+    mockMachinesService.buildRequirementsMachineId.set('different-machine');
     mockBuildRequirementsResource.value.set(mockBuildRequirements);
 
     expect(component.selectedMachineRequirements()).toEqual([]);
@@ -131,7 +131,7 @@ describe('MachineCatalogComponent', () => {
 
   it('should return build requirements when machine is selected and ID matches', () => {
     component.selectedMachine.set(mockMachine);
-    mockMachineCatalogService.buildRequirementsMachineId.set(mockMachine.id);
+    mockMachinesService.buildRequirementsMachineId.set(mockMachine.id);
     mockBuildRequirementsResource.value.set(mockBuildRequirements);
 
     expect(component.selectedMachineRequirements()).toEqual(mockBuildRequirements);
@@ -144,7 +144,7 @@ describe('MachineCatalogComponent', () => {
 
   it('should return empty array for selectedMachineRecipes when machine ID does not match', () => {
     component.selectedMachine.set(mockMachine);
-    mockMachineCatalogService.recipesMachineId.set('different-machine');
+    mockMachinesService.recipesMachineId.set('different-machine');
     mockRecipesResource.value.set(mockRecipes);
 
     expect(component.selectedMachineRecipes()).toEqual([]);
@@ -152,7 +152,7 @@ describe('MachineCatalogComponent', () => {
 
   it('should return recipes when machine is selected and ID matches', () => {
     component.selectedMachine.set(mockMachine);
-    mockMachineCatalogService.recipesMachineId.set(mockMachine.id);
+    mockMachinesService.recipesMachineId.set(mockMachine.id);
     mockRecipesResource.value.set(mockRecipes);
 
     expect(component.selectedMachineRecipes()).toEqual(mockRecipes);
@@ -191,7 +191,7 @@ describe('MachineCatalogComponent', () => {
 
   it('should handle array conversion for build requirements', () => {
     component.selectedMachine.set(mockMachine);
-    mockMachineCatalogService.buildRequirementsMachineId.set(mockMachine.id);
+    mockMachinesService.buildRequirementsMachineId.set(mockMachine.id);
     // Simulate non-array value being set
     mockBuildRequirementsResource.value.set(null as any);
     expect(component.selectedMachineRequirements()).toEqual([]);
@@ -199,7 +199,7 @@ describe('MachineCatalogComponent', () => {
 
   it('should handle array conversion for recipes', () => {
     component.selectedMachine.set(mockMachine);
-    mockMachineCatalogService.recipesMachineId.set(mockMachine.id);
+    mockMachinesService.recipesMachineId.set(mockMachine.id);
     // Simulate non-array value being set
     mockRecipesResource.value.set(null as any);
     expect(component.selectedMachineRecipes()).toEqual([]);

@@ -1,7 +1,8 @@
 import Database from 'better-sqlite3';
 import { getDatabase } from '../db/init';
-import { DatabaseBuilding } from '../models/database.models';
+import { DatabaseBuilding, DatabaseBuildRequirement } from '../models/database.models';
 import { MachineCategory } from '../../app/shared/models/machine.model';
+import { BuildRequirement } from '../../app/shared/models/build-requirement.model';
 
 export interface MachineResponse {
   id: string;
@@ -16,6 +17,7 @@ export interface MachineResponse {
   maxConveyorBeltConnections?: number;
   maxPipeConnections?: number;
   recipes?: string[];
+  buildRequirements?: BuildRequirement[];
 }
 
 export class MachinesService {
@@ -30,7 +32,7 @@ export class MachinesService {
       .prepare('SELECT * FROM buildings ORDER BY tier, category, name')
       .all() as DatabaseBuilding[];
 
-    return rows.map(this.mapRowToResponse);
+    return rows.map((row) => this.mapRowToResponse(row));
   }
 
   getMachineById(id: string): MachineResponse | undefined {
@@ -46,7 +48,7 @@ export class MachinesService {
       .prepare('SELECT * FROM buildings WHERE category = ? ORDER BY tier, name')
       .all(category) as DatabaseBuilding[];
 
-    return rows.map(this.mapRowToResponse);
+    return rows.map((row) => this.mapRowToResponse(row));
   }
 
   getMachinesByTier(maxTier: number): MachineResponse[] {
@@ -54,7 +56,7 @@ export class MachinesService {
       .prepare('SELECT * FROM buildings WHERE tier <= ? ORDER BY tier, category, name')
       .all(maxTier) as DatabaseBuilding[];
 
-    return rows.map(this.mapRowToResponse);
+    return rows.map((row) => this.mapRowToResponse(row));
   }
 
   searchMachines(query: string): MachineResponse[] {
@@ -65,7 +67,7 @@ export class MachinesService {
       )
       .all(searchPattern, searchPattern, searchPattern) as DatabaseBuilding[];
 
-    return rows.map(this.mapRowToResponse);
+    return rows.map((row) => this.mapRowToResponse(row));
   }
 
   private mapRowToResponse(row: DatabaseBuilding): MachineResponse {
@@ -104,6 +106,18 @@ export class MachinesService {
       } catch {
         // ignore invalid JSON
       }
+    }
+
+    // Fetch and include build requirements
+    const buildRequirementsRows = this.db
+      .prepare('SELECT * FROM build_requirements WHERE factory_id = ? ORDER BY item')
+      .all(row.id) as DatabaseBuildRequirement[];
+
+    if (buildRequirementsRows.length > 0) {
+      response.buildRequirements = buildRequirementsRows.map((br) => ({
+        item: br.item,
+        amount: br.amount,
+      }));
     }
 
     return response;
