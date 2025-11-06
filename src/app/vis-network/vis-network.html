@@ -1,8 +1,7 @@
 @if (isBrowser) {
-<div #container class="vis-network"></div>
+<div #container class="vis-network w-full h-full shadow-4 border-round"></div>
 
-<button pButton type="button" label="Add Node" (click)="addNode()" [disabled]="!isNetworkReady()"></button>
-
+<!-- <button pButton type="button" label="Add Node" (click)="addNode()" [disabled]="!isNetworkReady()"></button> -->
 
 } @else {
 <div class="flex flex-column gap-2">

@@ -26,13 +26,13 @@ export class BuildPlanner {
     this.responsiveOptions = [
       {
         breakpoint: '1400px',
-        numVisible: 2,
-        numScroll: 1
+        numVisible: 3,
+        numScroll: 3
       },
       {
         breakpoint: '1199px',
-        numVisible: 3,
-        numScroll: 1
+        numVisible: 2,
+        numScroll: 2
       },
       {
         breakpoint: '767px',
@@ -66,7 +66,11 @@ export class BuildPlanner {
     }
   }
 
-  getImageSrc(machineName: string): string {
+  getMachineImageSrc(machineName: string): string {
     return `/assets/machines/${machineName}.webp`;
+  }
+
+  getIngredientImageSrc(ingredientName: string): string {
+    return `/assets/ingredients/${ingredientName.split(' ').join('_')}.png`;
   }
 }

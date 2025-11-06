@@ -1,8 +1,16 @@
-img {
+.machineImg {
     width: 270px !important;
     height: 270px !important;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .card {
     border: 1px solid #ccc;
+}
+
+/* Carousel item background - dark with subtle orange tint */
+::ng-deep .p-carousel-item>div {
+    background: linear-gradient(150deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 26, 15, 0.7) 100%);
 }
