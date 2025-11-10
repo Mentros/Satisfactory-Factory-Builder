@@ -3,6 +3,7 @@ import { Network, Edge, Node, Options } from 'vis-network/peer/esm/vis-network.j
 import { DataSet } from 'vis-data/peer/esm/vis-data.js';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { MachineDefinition } from '../shared/models/machine.model';
 
 @Component({
   selector: 'sp-vis-network',
@@ -139,11 +140,49 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
     });
   }
 
+  addMachineNode(machine: MachineDefinition, screenX: number, screenY: number) {
+    if (!this.network) {
+      return;
+    }
+
+    const { roundedX, roundedY } = { roundedX: Math.round(screenX / 20) * 20, roundedY: Math.round(screenY / 20) * 20 };
+
+    // Create node for the machine
+    const newNode: Node = {
+      id: this.nodesSignal().length + 1,
+      label: machine.name,
+      shape: 'box',
+      title: `${machine.name} | ${machine.description || ''}`,
+      x: roundedX,
+      y: roundedY,
+      size: 30,
+      color: {
+        background: '#fa9549',
+        border: '#d8751f',
+        highlight: {
+          background: '#ffa562',
+          border: '#fa9549'
+        }
+      },
+      font: {
+        color: '#ffffff',
+        size: 14
+      }
+    };
+
+    console.log('newNode', newNode);
+
+    this.nodesSignal.update(nodes => {
+      nodes.add(newNode);
+      return nodes;
+    });
+  }
+
   private addClickEventListener() {
     if (!this.network) return;
 
     this.network.on('click', (params: any) => {
-      console.log('click', params);
+      //console.log('click', params.pointer.canvas);
       const nodeId = params.nodes?.[0];
       if (!nodeId) return;
 
@@ -186,9 +225,11 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
     const pos = this.network!.getPositions([String(from), String(to)]);
     const A = pos[String(from)], B = pos[String(to)];
     const bendId = 'bend_' + Math.random().toString(36).slice(2, 9);
+    const { roundedX, roundedY } = { roundedX: Math.round(B.x / 20) * 20, roundedY: Math.round(A.y / 20) * 20 };
+
     this.nodesSignal.update(nodes => {
       nodes.add({
-        id: bendId, x: B.x, y: A.y, fixed: { x: true, y: true },
+        id: bendId, x: roundedX, y: roundedY, fixed: { x: true, y: true },
         shape: 'dot', size: 0.1
       });
       return nodes;
@@ -204,7 +245,7 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
 
 
 
-  ngOnDestroy() { 
+  ngOnDestroy() {
     //this.network?.destroy();
   }
 

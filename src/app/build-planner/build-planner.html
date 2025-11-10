@@ -1,8 +1,10 @@
-<div class="h-full flex flex-column">
+<div class="h-full flex flex-column m-2">
     <p-carousel [value]="machines" [circular]="false" [numVisible]="3" [numScroll]="3"
-        [responsiveOptions]="responsiveOptions">
+        [responsiveOptions]="responsiveOptions" [pt]="carouselPT">
         <ng-template let-machine #item>
             <div class="border-round m-2 p-2 shadow-4"
+            draggable="true"
+            (dragstart)="onDragStart($event, machine.id)"
                 style="display: flex; flex-direction: column; align-items: center;">
                 <div class="mb-4">
                     <div class="relative">
@@ -33,8 +35,10 @@
             </div>
         </ng-template>
     </p-carousel>
-    <div class="w-full flex-1 p-2" style="min-height: 0;">    
-        <sp-vis-network>
+    <div class="w-full flex-1 p-2 mb-2" style="min-height: 0;" 
+         (dragover)="onDragOver($event)"
+         (drop)="onDrop($event)">
+        <sp-vis-network #visNetwork>
         </sp-vis-network>
     </div>
 </div>
