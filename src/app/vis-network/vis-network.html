@@ -1,12 +1,4 @@
 @if (isBrowser) {
 <div #container class="vis-network w-full h-full shadow-4 border-round"></div>
-
-<!-- <button pButton type="button" label="Add Node" (click)="addNode()" [disabled]="!isNetworkReady()"></button> -->
-
-} @else {
-<div class="flex flex-column gap-2">
-    <div class="flex flex-row gap-2">
-        <button type="button" label="Add Node" (click)="addNode()"></button>
-    </div>
-</div>
+<p-contextmenu [target]="container" [model]="items" (onhide)="contextNode = null;"/>
 }

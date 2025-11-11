@@ -6,7 +6,6 @@ let Database: any = null;
 let db: any = null;
 
 function getDirname(): string {
-  // Try import.meta.dirname first (Node 20.11+)
   if (typeof import.meta.dirname !== 'undefined') {
     return import.meta.dirname;
   }
