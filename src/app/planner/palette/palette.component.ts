@@ -6,7 +6,7 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { CommonModule } from '@angular/common';
-import { MachinesService } from '../shared/services/machines.service';
+import { MachinesService } from '../../shared/services/machines.service';
 
 @Component({
   selector: 'sp-palette',

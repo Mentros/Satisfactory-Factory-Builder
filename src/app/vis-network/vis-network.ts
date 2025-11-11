@@ -61,6 +61,9 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
 
   private edgeSource: string | number | null = null;
 
+  // Track bend point relationships: bendId -> { from, to }
+  private bendPointMap = new Map<string | number, { from: string | number, to: string | number }>();
+
 
   ngAfterViewInit() {
     if (!this.isBrowser) {
@@ -89,10 +92,13 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
         if (!params?.nodes?.length) return;
         const updates: { id: string | number, x: number, y: number }[] = [];
         const positions = this.network!.getPositions(params.nodes);
+        const movedNodeIds: (string | number)[] = [];
+        
         for (const id of params.nodes) {
-          if (isLocked(id)) continue;              // don't move bend1
+          if (isLocked(id)) continue;              // don't move bend points manually
           const p = positions[id];
           updates.push({ id, x: snap(p.x), y: snap(p.y) });
+          movedNodeIds.push(id);
         }
 
         if (updates.length) {
@@ -100,6 +106,12 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
             nodes.update(updates);
             return nodes;
           });
+          
+          // Recalculate bend points after updating node positions
+          // Use setTimeout to ensure network has updated positions
+          setTimeout(() => {
+            this.recalculateBendPoints(movedNodeIds);
+          }, 0);
         }
       });
 
@@ -170,8 +182,6 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
       }
     };
 
-    console.log('newNode', newNode);
-
     this.nodesSignal.update(nodes => {
       nodes.add(newNode);
       return nodes;
@@ -182,7 +192,6 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
     if (!this.network) return;
 
     this.network.on('click', (params: any) => {
-      //console.log('click', params.pointer.canvas);
       const nodeId = params.nodes?.[0];
       if (!nodeId) return;
 
@@ -227,6 +236,9 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
     const bendId = 'bend_' + Math.random().toString(36).slice(2, 9);
     const { roundedX, roundedY } = { roundedX: Math.round(B.x / 20) * 20, roundedY: Math.round(A.y / 20) * 20 };
 
+    // Store the relationship
+    this.bendPointMap.set(bendId, { from, to });
+
     this.nodesSignal.update(nodes => {
       nodes.add({
         id: bendId, x: roundedX, y: roundedY, fixed: { x: true, y: true },
@@ -243,6 +255,52 @@ export class VisNetwork implements AfterViewInit, OnDestroy {
     });
   }
 
+  private recalculateBendPoints(movedNodeIds: (string | number)[]) {
+    const GRID = 20;
+    const snap = (v: number) => Math.round(v / GRID) * GRID;
+    
+    // Find all bend points connected to moved nodes
+    const bendPointsToUpdate = new Map<string | number, { from: string | number, to: string | number }>();
+    
+    for (const [bendId, { from, to }] of this.bendPointMap.entries()) {
+      if (movedNodeIds.includes(from) || movedNodeIds.includes(to)) {
+        bendPointsToUpdate.set(bendId, { from, to });
+      }
+    }
+
+    if (bendPointsToUpdate.size === 0) return;
+
+    // Get current positions of all relevant nodes
+    const allNodeIds = new Set<string | number>();
+    for (const { from, to } of bendPointsToUpdate.values()) {
+      allNodeIds.add(String(from));
+      allNodeIds.add(String(to));
+    }
+    const positions = this.network!.getPositions(Array.from(allNodeIds));
+
+    // Calculate new bend point positions
+    const bendUpdates: { id: string | number, x: number, y: number }[] = [];
+    
+    for (const [bendId, { from, to }] of bendPointsToUpdate.entries()) {
+      const A = positions[String(from)];
+      const B = positions[String(to)];
+      
+      if (A && B) {
+        // Right-angle: use B's x and A's y
+        const roundedX = snap(B.x);
+        const roundedY = snap(A.y);
+        bendUpdates.push({ id: bendId, x: roundedX, y: roundedY });
+      }
+    }
+
+    // Update bend point positions in signal
+    if (bendUpdates.length > 0) {
+      this.nodesSignal.update(nodes => {
+        nodes.update(bendUpdates);
+        return nodes;
+      });
+    }
+  }
 
 
   ngOnDestroy() {

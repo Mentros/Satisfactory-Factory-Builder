@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { CanvasComponent } from '../canvas/canvas.component';
-import { PaletteComponent } from '../palette/palette.component';
+import { CanvasComponent } from './canvas/canvas.component';
+import { PaletteComponent } from './palette/palette.component';
 
 @Component({
   selector: 'sp-planner-page',

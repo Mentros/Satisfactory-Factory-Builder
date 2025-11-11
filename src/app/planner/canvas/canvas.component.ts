@@ -1,10 +1,10 @@
 import { Component, ElementRef, Input, OnInit, PLATFORM_ID, inject, ViewChild, computed } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { PlannerService, PlacedBuilding } from '../shared/services/planner.service';
-import { MachinesService } from '../shared/services/machines.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { ButtonModule } from 'primeng/button';
+import { PlacedBuilding, PlannerService } from '../../shared/services/planner.service';
+import { MachinesService } from '../../shared/services/machines.service';
 
 @Component({
   selector: 'sp-planner-canvas',
