@@ -19,6 +19,16 @@ export class BuildPlanner {
 
   protected readonly responsiveOptions = [
     {
+      breakpoint: '2560px',
+      numVisible: 6,
+      numScroll: 3
+    },
+    {
+      breakpoint: '1680px',
+      numVisible: 4,
+      numScroll: 3
+    },
+    {
       breakpoint: '1400px',
       numVisible: 3,
       numScroll: 3
@@ -27,16 +37,6 @@ export class BuildPlanner {
       breakpoint: '1199px',
       numVisible: 2,
       numScroll: 2
-    },
-    {
-      breakpoint: '767px',
-      numVisible: 2,
-      numScroll: 1
-    },
-    {
-      breakpoint: '575px',
-      numVisible: 1,
-      numScroll: 1
     }
   ]
 
