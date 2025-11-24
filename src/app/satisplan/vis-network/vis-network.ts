@@ -3,8 +3,8 @@ import { Network, Edge, Node, Options, IdType } from 'vis-network/peer/esm/vis-n
 import { DataSet } from 'vis-data/peer/esm/vis-data.js';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { MachineDefinition } from '../shared/models/machine.model';
-import { environment } from '../../environments/environment';
+import { MachineDefinition } from '../../shared/models/machine.model';
+import { environment } from '../../../environments/environment';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { MenuItem } from 'primeng/api';
 

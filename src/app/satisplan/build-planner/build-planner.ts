@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Carousel, CarouselModule, CarouselPassThrough } from 'primeng/carousel';
-import { MachineCategory, MachineDefinition } from '../shared/models/machine.model';
-import { MachinesService } from '../shared/services/machines.service';
+import { MachineCategory, MachineDefinition } from '../../shared/models/machine.model';
+import { MachinesService } from '../../shared/services/machines.service';
 import { TagModule } from 'primeng/tag';
 import { CommonModule } from '@angular/common';
 import { VisNetwork } from '../vis-network/vis-network';
@@ -13,7 +13,7 @@ import { CardModule } from 'primeng/card';
   templateUrl: './build-planner.html',
   styleUrl: './build-planner.css',
 })
-export class BuildPlanner {
+export class BuildPlanner implements OnInit {
   @ViewChild('visNetwork') visNetwork!: VisNetwork;
   machines: MachineDefinition[] = [];
 

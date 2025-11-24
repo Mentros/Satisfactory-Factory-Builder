@@ -6,6 +6,7 @@
 
 ::ng-deep .factory-cards-container {
   width: 100%;
+  background: linear-gradient(150deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 26, 15, 0.7) 100%) !important;
 }
 
 ::ng-deep .factory-card-item {
@@ -14,21 +15,27 @@
   max-width: 400px;
 }
 
+::ng-deep .factory-header-card {
+  border: 1px solid #2a2a2a !important;
+  background: linear-gradient(150deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 26, 15, 0.7) 100%) !important;
+}
+
 ::ng-deep .factory-header-title {
-  color: #1a1a1a;
+  color: #fa9549;
 }
 
 ::ng-deep .factory-header-desc {
   color: #f5f5f5;
+  opacity: 0.9;
 }
 
 ::ng-deep .factory-card {
-  background-color: #1a1a1a !important;
+  background: linear-gradient(150deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 26, 15, 0.7) 100%) !important;
   border-color: #2a2a2a !important;
 }
 
 ::ng-deep .factory-card:hover {
-  background-color: #252525 !important;
+  background: linear-gradient(150deg, rgba(37, 37, 37, 0.95) 0%, rgba(52, 32, 20, 0.8) 100%) !important;
   border-color: #fa9549 !important;
 }
 
@@ -66,7 +73,7 @@
 }
 
 ::ng-deep .factory-detail-card {
-  background-color: #1a1a1a !important;
+  background: linear-gradient(150deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 26, 15, 0.7) 100%) !important;
   border-color: #d8751f !important;
 }
 
@@ -83,7 +90,7 @@
 }
 
 ::ng-deep .factory-req-item {
-  background-color: #252525 !important;
+  background: linear-gradient(150deg, rgba(37, 37, 37, 0.95) 0%, rgba(52, 32, 20, 0.7) 100%) !important;
   border-color: #2a2a2a !important;
 }
 
@@ -96,7 +103,7 @@
 }
 
 ::ng-deep .factory-recipe-card {
-  background-color: #252525 !important;
+  background: linear-gradient(150deg, rgba(37, 37, 37, 0.95) 0%, rgba(52, 32, 20, 0.7) 100%) !important;
   border-color: #2a2a2a !important;
 }
 

@@ -2,8 +2,8 @@ import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from 'primeng/button';
-import { MachinesService } from '../shared/services/machines.service';
-import { MachineDefinition } from '../shared/models/machine.model';
+import { MachinesService } from '../../shared/services/machines.service';
+import { MachineDefinition } from '../../shared/models/machine.model';
 
 @Component({
   selector: 'sp-machine-catalog',

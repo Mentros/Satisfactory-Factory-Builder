@@ -15,7 +15,6 @@ import { CommonModule } from '@angular/common';
 })
 export class App{
   private readonly platformId = inject(PLATFORM_ID);
-  protected readonly title = signal('Satisplan');
   protected readonly isBrowser = isPlatformBrowser(this.platformId);
   protected readonly menuItems = menuItems;
   protected drawerExpanded = signal(false);
